@@ -139,6 +139,18 @@ tbody tr:nth-child(even) {
 # 👉 Apply kedua-dua sekali
 st.markdown(css + table_css, unsafe_allow_html=True)
 
+st.markdown("""
+<style>
+.chart-card {
+    background: white;
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 4px 20px rgba(150, 80, 255, 0.10);
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # ==============================
 # GLOBAL BACKGROUND + CHART CARD
