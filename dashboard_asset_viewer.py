@@ -218,8 +218,8 @@ def kpi_card(title, value):
 # -------------------------
 SAP_PATH = "Asset_Balance_SAP.csv"
 EASSET_PATH = "Senarai_Aset_Easset.csv"
-DIM_CLASS_PATH = "DIM_CLASS.csv"
-DIM_EVA_PATH = "DIM_EVA.csv"
+DIM_CLASS_PATH = "DIM Asset Class.csv"
+DIM_EVA_PATH = "DIM Eva grp 1.csv"
 
 import os
 from datetime import datetime
