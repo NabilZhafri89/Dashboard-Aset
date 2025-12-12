@@ -591,6 +591,7 @@ chart2_df = build_chart_data(easset_f, "Easset sahaja")
 chart3_df = build_chart_data(diff_eva_f, "Lokasi berbeza")
 chart4_df = build_chart_data(mis_f, "Kelas 40000/41000 < RM2000")
 
+
 def make_bar_chart(df, title):
     if df.empty:
         return None
@@ -599,7 +600,7 @@ def make_bar_chart(df, title):
         df,
         x="PTJ",
         y="Jumlah Aset",
-        text="Jumlah Aset"        # label atas bar
+        text="Jumlah Aset"  # label atas bar
     )
 
     # Warna bar: outline purple, fill purple pudar
@@ -607,11 +608,10 @@ def make_bar_chart(df, title):
         marker_color="rgba(150,80,255,0.15)",   # fill lembut
         marker_line_color="rgba(150,80,255,1)", # outline terang
         marker_line_width=0.5,
-        # kalau nak customdata pun boleh, ikut nama kolum sebenar
-        # customdata=df["Jumlah Aset"],
     )
 
     fig.update_layout(
+        height=340,   # ✅ fix tinggi chart supaya tak melambung
         bargap=0.3,
         title=dict(
             text=title,
@@ -624,7 +624,6 @@ def make_bar_chart(df, title):
         yaxis_title=None,
         yaxis=dict(showticklabels=False, showgrid=False, zeroline=False),
 
-
         # FIX LABEL X-AXIS HILANG
         xaxis=dict(
             showgrid=False,
@@ -636,27 +635,33 @@ def make_bar_chart(df, title):
 
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
-        margin=dict(l=10, r=10, t=50, b=10),
-)
-
-
+        margin=dict(l=10, r=10, t=50, b=40),
+    )
 
     return fig
 
 
 def render_chart_card(df_chart, title):
     """Bungkus chart dalam kotak rounded."""
-    st.markdown('<div class="chart-card">', unsafe_allow_html=True)
+    # ✅ hadkan tinggi card & buang lebihan supaya tiada scrollbar
+    st.markdown(
+        """
+        <div class="chart-card" style="max-height: 420px; overflow: hidden;">
+        """,
+        unsafe_allow_html=True,
+    )
 
     fig = make_bar_chart(df_chart, title)
-    if fig:
-        st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
+    if fig is not None:
+        st.plotly_chart(
+            fig,
+            use_container_width=True,
+            config={"displayModeBar": False},
+        )
     else:
         st.write("Tiada data untuk paparan.")
 
-    st.markdown('</div>', unsafe_allow_html=True)
-
-
+    st.markdown("</div>", unsafe_allow_html=True)
 # -------------------------
 # MAIN CONTENT
 # -------------------------
