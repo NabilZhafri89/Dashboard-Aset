@@ -140,18 +140,7 @@ test_background_css = """
         background-color: linear-gradient(180deg, #F9F6FF 0%, #FFFFFF 100%)  !important;   /* grey lembut */
     }
 
-  /* --- CHART BOX --- */
-div[data-testid="stPlotlyChart"] {
-    background-color: #FFFFFF !important;
-    border-radius: 18px !important;
-    padding: 20px !important;
-    margin-top: 20px !important;
-    
-    /* Light floating shadow WITHOUT visible border */
-    box-shadow: 0 8px 24px rgba(150, 80, 255, 0.10) !important;
-
-    border: none !important;   /* Ensure NO border at all */
-}
+  
 
 
 </style>
@@ -642,24 +631,17 @@ def make_bar_chart(df, title):
 
 
 def render_chart_card(df_chart, title):
-    """Bungkus chart dalam kotak rounded."""
-    # ✅ hadkan tinggi card & buang lebihan supaya tiada scrollbar
-    st.markdown(
-        """
-        <div class="chart-card" style="max-height: 420px; overflow: hidden;">
-        """,
-        unsafe_allow_html=True,
-    )
-
     fig = make_bar_chart(df_chart, title)
-    if fig is not None:
+
+    if fig:
         st.plotly_chart(
             fig,
             use_container_width=True,
-            config={"displayModeBar": False},
+            config={"displayModeBar": False}
         )
     else:
         st.write("Tiada data untuk paparan.")
+
 
     st.markdown("</div>", unsafe_allow_html=True)
 # -------------------------
