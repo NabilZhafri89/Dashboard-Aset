@@ -17,13 +17,23 @@ st.sidebar.markdown(
 
 st.markdown("""
 <style>
-.chart-box {
-    background: white;
+
+.chart-card {
+    background: #FFFFFF !important;
     padding: 25px;
-    border-radius: 16px;
-    box-shadow: 0px 4px 16px rgba(150, 80, 255, 0.15);
-    margin-bottom: 25px;
+    border-radius: 20px;
+    margin-top: 25px;
+    box-shadow: 0 8px 24px rgba(150, 80, 255, 0.12);
 }
+
+/* REMOVE the bad CSS that broke background */
+.block-container {
+    background: transparent !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -158,10 +168,7 @@ st.markdown("""
 test_background_css = """
 <style>
 
-    /* --- PAGE BACKGROUND (supaya kotak chart nampak jelas) --- */
-    body, .main, .block-container {
-        background-color: linear-gradient(180deg, #F9F6FF 0%, #FFFFFF 100%)  !important;   /* grey lembut */
-    }
+ 
 
   
 
@@ -654,13 +661,13 @@ def make_bar_chart(df, title):
 
 
 def render_chart_card(df_chart, title):
-    with st.container():
-        st.markdown('<div class="chart-box">', unsafe_allow_html=True)
+    st.markdown('<div class="chart-card">', unsafe_allow_html=True)
 
-        fig = make_bar_chart(df_chart, title)
+    fig = make_bar_chart(df_chart, title)
+    if fig:
         st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
 
-        st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # -------------------------
 # MAIN CONTENT
