@@ -217,7 +217,7 @@ def kpi_card(title, value):
 # File paths
 # -------------------------
 SAP_PATH = "Asset_Balance_SAP.csv"
-EASSET_PATH = "Asset_Balance_EASSET.csv"
+EASSET_PATH = "Senarai_Aset_Easset.csv"
 DIM_CLASS_PATH = "DIM_CLASS.csv"
 DIM_EVA_PATH = "DIM_EVA.csv"
 
