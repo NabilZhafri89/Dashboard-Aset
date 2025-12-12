@@ -10,9 +10,8 @@ st.set_page_config(page_title="Dashboard SAP Vs Easset", layout="wide")
 # LOGO SIDEBAR
 # =========================
 logo_path = "cidb_logo.png"
+st.sidebar.image(logo_path, width=140)
 
-# Tarik balik jarak supaya "Tapisan" tak jauh ke bawah
-st.sidebar.markdown("<div style='margin-top:-15px;'></div>", unsafe_allow_html=True)
 
 # =========================
 # CSS (PAGE + SIDEBAR + TABLE + KPI)
