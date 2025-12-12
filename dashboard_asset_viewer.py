@@ -117,30 +117,32 @@ st.markdown(css, unsafe_allow_html=True)
 
 st.markdown("""
 <style>
-/* ==============================
-   CHART CARD (borderless + shadow)
-   ============================== */
-div[data-testid="stPlotlyChart"]{
+/* ======================================
+   BORDERLESS CARD for st.container(border=True)
+   ====================================== */
+
+/* 1) Wrapper */
+div[data-testid="stVerticalBlockBorderWrapper"]{
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+}
+
+/* 2) Card sebenar (child dalam wrapper) */
+div[data-testid="stVerticalBlockBorderWrapper"] > div{
     background: #FFFFFF !important;
     border: none !important;
     border-radius: 18px !important;
+    overflow: hidden !important;
 
     box-shadow:
         0 10px 28px rgba(155, 92, 255, 0.18),
         0 2px 6px rgba(155, 92, 255, 0.10) !important;
 
     padding: 20px !important;
-    margin-top: 12px !important;
-}
-
-/* pastikan clip ikut border radius */
-div[data-testid="stPlotlyChart"] > div{
-    border-radius: 18px !important;
-    overflow: hidden !important;
 }
 </style>
 """, unsafe_allow_html=True)
-
 
 
 # =========================
@@ -498,16 +500,17 @@ def make_bar_chart(df, title):
 
 def render_chart_card(df_chart, title):
     fig = make_bar_chart(df_chart, title)
+
     if fig is None:
         st.write("Tiada data untuk paparan.")
         return
 
-    st.plotly_chart(
-        fig,
-        use_container_width=True,
-        config={"displayModeBar": False}
-    )
-
+    with st.container(border=True):
+        st.plotly_chart(
+            fig,
+            use_container_width=True,
+            config={"displayModeBar": False}
+        )
 
 # MAIN
 # =========================
