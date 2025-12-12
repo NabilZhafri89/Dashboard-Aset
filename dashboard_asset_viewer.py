@@ -9,8 +9,7 @@ st.set_page_config(page_title="Dashboard SAP Vs Easset", layout="wide")
 # =========================
 # LOGO SIDEBAR
 # =========================
-logo_path = r"C:\Users\nabil\OneDrive\My Document\Aset dan tuntutan\2025\Aset\Projek Dashboard aset\cidb_logo.png"
-st.sidebar.image(logo_path, width=140)
+logo_path = "cidb_logo.png"
 
 # Tarik balik jarak supaya "Tapisan" tak jauh ke bawah
 st.sidebar.markdown("<div style='margin-top:-15px;'></div>", unsafe_allow_html=True)
@@ -133,10 +132,10 @@ def kpi_card(title, value):
 # =========================
 # FILE PATHS
 # =========================
-SAP_PATH = r"C:\Users\nabil\OneDrive\My Document\Aset dan tuntutan\2025\Aset\Projek Dashboard aset\Asset_Balance_SAP.csv"
-EASSET_PATH = r"C:\Users\nabil\OneDrive\My Document\Aset dan tuntutan\2025\Aset\Projek Dashboard aset\Senarai_Aset_Easset.csv"
-DIM_CLASS_PATH = r"C:\Users\nabil\OneDrive\My Document\Aset dan tuntutan\2025\Aset\Projek Dashboard aset\DIM Asset Class.csv"
-DIM_EVA_PATH = r"C:\Users\nabil\OneDrive\My Document\Aset dan tuntutan\2025\Aset\Projek Dashboard aset\DIM Eva grp 1.csv"
+SAP_PATH = "Asset_Balance_SAP.csv"
+EASSET_PATH = "Senarai_Aset_Easset.csv"
+DIM_CLASS_PATH = "DIM Asset Class.csv"
+DIM_EVA_PATH = "DIM Eva grp 1.csv"
 
 # Tarikh kemaskini
 last_update_timestamp = os.path.getmtime(SAP_PATH)
