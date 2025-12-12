@@ -15,6 +15,17 @@ st.sidebar.markdown(
     unsafe_allow_html=True
 )
 
+st.markdown("""
+<style>
+.chart-box {
+    background: white;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0px 4px 16px rgba(150, 80, 255, 0.15);
+    margin-bottom: 25px;
+}
+</style>
+""", unsafe_allow_html=True)
 
 st.markdown("""
 <style>
@@ -631,19 +642,14 @@ def make_bar_chart(df, title):
 
 
 def render_chart_card(df_chart, title):
-    fig = make_bar_chart(df_chart, title)
+    with st.container():
+        st.markdown('<div class="chart-box">', unsafe_allow_html=True)
 
-    if fig:
-        st.plotly_chart(
-            fig,
-            use_container_width=True,
-            config={"displayModeBar": False}
-        )
-    else:
-        st.write("Tiada data untuk paparan.")
+        fig = make_bar_chart(df_chart, title)
+        st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
 
+        st.markdown("</div>", unsafe_allow_html=True)
 
-    st.markdown("</div>", unsafe_allow_html=True)
 # -------------------------
 # MAIN CONTENT
 # -------------------------
