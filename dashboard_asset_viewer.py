@@ -34,18 +34,8 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-</style>
-""", unsafe_allow_html=True)
 
-st.markdown("""
-<style>
-/* Rounded bar corners untuk semua plotly bar */
-svg .bar rect {
-    rx: 8px;
-    ry: 8px;
-}
-</style>
-""", unsafe_allow_html=True)
+
 
 # 1) SIDEBAR + GLOBAL CSS
 css = """
@@ -604,7 +594,9 @@ def build_chart_data(df, issue_name):
     g["Isu"] = issue_name
     return g
 
-# chart datasets
+# -------------------------
+# CHART DATASETS
+# -------------------------
 chart1_df = build_chart_data(sap_f, "SAP sahaja")
 chart2_df = build_chart_data(easset_f, "Easset sahaja")
 chart3_df = build_chart_data(diff_eva_f, "Lokasi berbeza")
@@ -629,29 +621,27 @@ def make_bar_chart(df, title):
         marker_line_width=0.5,
     )
 
+    # Layout ringkas – tiada scroll dalam card
     fig.update_layout(
-        height=340,   # ✅ fix tinggi chart supaya tak melambung
+        height=320,   # tinggi tetap, cukup untuk elak scrollbar dalam card
         bargap=0.3,
         title=dict(
             text=title,
             x=0,
             xanchor="left",
-            font=dict(size=14, color="#778899", family="Arial")
+            font=dict(size=14, color="#778899", family="Arial"),
         ),
         showlegend=False,
         xaxis_title=None,
         yaxis_title=None,
         yaxis=dict(showticklabels=False, showgrid=False, zeroline=False),
-
-        # FIX LABEL X-AXIS HILANG
         xaxis=dict(
             showgrid=False,
             tickmode="array",
             tickvals=df["PTJ"].tolist(),
             ticktext=df["PTJ"].tolist(),
-            tickfont=dict(size=12)
+            tickfont=dict(size=12),
         ),
-
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
         margin=dict(l=10, r=10, t=50, b=40),
@@ -661,13 +651,19 @@ def make_bar_chart(df, title):
 
 
 def render_chart_card(df_chart, title):
+    # Kotak putih untuk chart – guna CSS .chart-card yang Nabil dah ada
     st.markdown('<div class="chart-card">', unsafe_allow_html=True)
 
     fig = make_bar_chart(df_chart, title)
-    if fig:
-        st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
+    if fig is not None:
+        st.plotly_chart(
+            fig,
+            use_container_width=True,
+            config={"displayModeBar": False},
+        )
 
     st.markdown('</div>', unsafe_allow_html=True)
+
 
 # -------------------------
 # MAIN CONTENT
