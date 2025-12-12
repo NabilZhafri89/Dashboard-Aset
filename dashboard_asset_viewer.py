@@ -507,24 +507,46 @@ with row2_col2:
 # ================================
 # TABLE 1
 # ================================
-st.markdown(
-    """
-    <h2 style="font-size:24px; font-weight:700; color:#8c92ac;">
-        Aset wujud dalam SAP Tiada di Easset
-    </h2>
-    """,
-    unsafe_allow_html=True
-)
+
 view1 = clean_view(sap_f)
+
 if not view1.empty:
     view1 = view1[["asset_no", "sub_no", "description_sap"]].rename(columns={
         "asset_no": "Asset No",
         "sub_no": "Sub No",
         "description_sap": "Keterangan"
     })
+else:
+    # pastikan view1 tetap ada column supaya tak error bila to_html/to_csv
+    view1 = pd.DataFrame(columns=["Asset No", "Sub No", "Keterangan"])
+
 view1 = view1.reset_index(drop=True)
 view1.insert(0, "Bil", range(1, len(view1) + 1))
+
+# --- tajuk + download sebaris ---
+title_col, btn_col = st.columns([8, 2], vertical_alignment="center")
+
+with title_col:
+    st.markdown(
+        "<h2 style='font-size:24px; font-weight:700; color:#8c92ac;'>"
+        "Aset wujud dalam SAP Tiada di Easset"
+        "</h2>",
+        unsafe_allow_html=True
+    )
+
+with btn_col:
+    csv_view1 = view1.to_csv(index=False).encode("utf-8")
+    st.download_button(
+        label="⬇️ Download CSV",
+        data=csv_view1,
+        file_name="aset_sap_tiada_easset.csv",
+        mime="text/csv",
+        use_container_width=True
+    )
+
+# --- table HTML (kekal macam kau buat) ---
 table_html = view1.to_html(index=False)
+
 st.markdown(
     f"""
     <div style="
@@ -541,27 +563,47 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+
+
 # ================================
 # TABLE 2
 # ================================
-st.markdown(
-    """
-    <h2 style="font-size:24px; font-weight:700; color:#8c92ac;">
-        Aset wujud dalam Easset Tiada di SAP
-    </h2>
-    """,
-    unsafe_allow_html=True
-)
 view2 = clean_view(easset_f)
+
 if not view2.empty:
     view2 = view2[["asset_no", "sub_no", "description_easset"]].rename(columns={
         "asset_no": "Asset No",
         "sub_no": "Sub No",
         "description_easset": "Keterangan"
     })
+else:
+    view2 = pd.DataFrame(columns=["Asset No", "Sub No", "Keterangan"])
+
 view2 = view2.reset_index(drop=True)
 view2.insert(0, "Bil", range(1, len(view2) + 1))
-table_html = view2.to_html(index=False)
+
+t2_title_col, t2_btn_col = st.columns([8, 2], vertical_alignment="center")
+
+with t2_title_col:
+    st.markdown(
+        "<h2 style='font-size:24px; font-weight:700; color:#8c92ac;'>"
+        "Aset wujud dalam Easset Tiada di SAP"
+        "</h2>",
+        unsafe_allow_html=True
+    )
+
+with t2_btn_col:
+    csv_view2 = view2.to_csv(index=False).encode("utf-8")
+    st.download_button(
+        label="⬇️ Download CSV",
+        data=csv_view2,
+        file_name="aset_easset_tiada_sap.csv",
+        mime="text/csv",
+        use_container_width=True
+    )
+
+table_html2 = view2.to_html(index=False)
+
 st.markdown(
     f"""
     <div style="
@@ -572,37 +614,54 @@ st.markdown(
         box-shadow: 0 4px 10px rgba(150, 80, 255, 0.07);
         margin-top: 8px;
     ">
-        {table_html}
+        {table_html2}
     </div>
     """,
     unsafe_allow_html=True
 )
 
+
 # ================================
 # TABLE 3
 # ================================
-st.markdown(
-    """
-    <h2 style="font-size:24px; font-weight:700; color:#8c92ac;">
-        Aset berlainan lokasi SAP vs Easset
-    </h2>
-    """,
-    unsafe_allow_html=True
-)
 view3 = clean_view(diff_eva_f)
+
 if not view3.empty:
-    view3 = view3[
-        ["asset_no", "sub_no", "description_sap", "sap_eva_desc", "easset_eva_desc"]
-    ].rename(columns={
+    view3 = view3[["asset_no", "sub_no", "description_sap", "sap_eva_desc", "easset_eva_desc"]].rename(columns={
         "asset_no": "Asset No",
         "sub_no": "Sub No",
         "description_sap": "Keterangan",
         "sap_eva_desc": "Lokasi SAP",
         "easset_eva_desc": "Lokasi Easset"
     })
+else:
+    view3 = pd.DataFrame(columns=["Asset No", "Sub No", "Keterangan", "Lokasi SAP", "Lokasi Easset"])
+
 view3 = view3.reset_index(drop=True)
 view3.insert(0, "Bil", range(1, len(view3) + 1))
-table_html = view3.to_html(index=False)
+
+t3_title_col, t3_btn_col = st.columns([8, 2], vertical_alignment="center")
+
+with t3_title_col:
+    st.markdown(
+        "<h2 style='font-size:24px; font-weight:700; color:#8c92ac;'>"
+        "Aset berlainan lokasi SAP vs Easset"
+        "</h2>",
+        unsafe_allow_html=True
+    )
+
+with t3_btn_col:
+    csv_view3 = view3.to_csv(index=False).encode("utf-8")
+    st.download_button(
+        label="⬇️ Download CSV",
+        data=csv_view3,
+        file_name="aset_lokasi_berlainan.csv",
+        mime="text/csv",
+        use_container_width=True
+    )
+
+table_html3 = view3.to_html(index=False)
+
 st.markdown(
     f"""
     <div style="
@@ -613,36 +672,53 @@ st.markdown(
         box-shadow: 0 4px 10px rgba(150, 80, 255, 0.07);
         margin-top: 8px;
     ">
-        {table_html}
+        {table_html3}
     </div>
     """,
     unsafe_allow_html=True
 )
 
+
 # ================================
 # TABLE 4
 # ================================
-st.markdown(
-    """
-    <h2 style="font-size:24px; font-weight:700; color:#8c92ac;">
-        Aset salah klasifikasi harta modal
-    </h2>
-    """,
-    unsafe_allow_html=True
-)
 view4 = clean_view(mis_f)
+
 if not view4.empty:
-    view4 = view4[
-        ["asset_no", "sub_no", "description", "acquisition_value"]
-    ].rename(columns={
+    view4 = view4[["asset_no", "sub_no", "description", "acquisition_value"]].rename(columns={
         "asset_no": "Asset No",
         "sub_no": "Sub No",
         "description": "Keterangan",
         "acquisition_value": "Harga"
     })
+else:
+    view4 = pd.DataFrame(columns=["Asset No", "Sub No", "Keterangan", "Harga"])
+
 view4 = view4.reset_index(drop=True)
 view4.insert(0, "Bil", range(1, len(view4) + 1))
-table_html = view4.to_html(index=False)
+
+t4_title_col, t4_btn_col = st.columns([8, 2], vertical_alignment="center")
+
+with t4_title_col:
+    st.markdown(
+        "<h2 style='font-size:24px; font-weight:700; color:#8c92ac;'>"
+        "Aset salah klasifikasi harta modal"
+        "</h2>",
+        unsafe_allow_html=True
+    )
+
+with t4_btn_col:
+    csv_view4 = view4.to_csv(index=False).encode("utf-8")
+    st.download_button(
+        label="⬇️ Download CSV",
+        data=csv_view4,
+        file_name="aset_salah_klasifikasi.csv",
+        mime="text/csv",
+        use_container_width=True
+    )
+
+table_html4 = view4.to_html(index=False)
+
 st.markdown(
     f"""
     <div style="
@@ -653,7 +729,7 @@ st.markdown(
         box-shadow: 0 4px 10px rgba(150, 80, 255, 0.07);
         margin-top: 8px;
     ">
-        {table_html}
+        {table_html4}
     </div>
     """,
     unsafe_allow_html=True
