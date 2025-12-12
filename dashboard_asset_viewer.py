@@ -4,10 +4,9 @@ import plotly.express as px
 
 st.set_page_config(page_title="Dashboard SAP Vs Easset", layout="wide")
 
-logo_path = r"C:\Users\nabil\OneDrive\My Document\Aset dan tuntutan\2025\Aset\Projek Dashboard aset\cidb_logo.png"
+logo_path = "cidb_logo.png"
+st.sidebar.image(logo_path, width=140)
 
-# LOGO CIDB DALAM SIDEBAR
-st.sidebar.image(logo_path, width=140)  # besar sikit
 
 # Tarik balik jarak supaya "Tapisan" tak jauh ke bawah
 st.sidebar.markdown(
@@ -216,10 +215,10 @@ def kpi_card(title, value):
 # -------------------------
 # File paths
 # -------------------------
-SAP_PATH = r"C:\Users\nabil\OneDrive\My Document\Aset dan tuntutan\2025\Aset\Projek Dashboard aset\Asset_Balance_SAP.csv"
-EASSET_PATH = r"C:\Users\nabil\OneDrive\My Document\Aset dan tuntutan\2025\Aset\Projek Dashboard aset\Senarai_Aset_Easset.csv"
-DIM_CLASS_PATH = r"C:\Users\nabil\OneDrive\My Document\Aset dan tuntutan\2025\Aset\Projek Dashboard aset\DIM Asset Class.csv"
-DIM_EVA_PATH = r"C:\Users\nabil\OneDrive\My Document\Aset dan tuntutan\2025\Aset\Projek Dashboard aset\DIM Eva grp 1.csv"
+SAP_PATH = "Asset_Balance_SAP.csv"
+EASSET_PATH = "Senarai_Aset_Easset.csv"
+DIM_CLASS_PATH = "DIM Asset Class.csv"
+DIM_EVA_PATH = "DIM Eva grp 1.csv"
 
 import os
 from datetime import datetime
