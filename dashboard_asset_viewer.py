@@ -115,6 +115,34 @@ tbody tr:nth-child(even) {
 """
 st.markdown(css, unsafe_allow_html=True)
 
+st.markdown("""
+<style>
+/* ==============================
+   CHART CARD (borderless + shadow)
+   ============================== */
+div[data-testid="stPlotlyChart"]{
+    background: #FFFFFF !important;
+    border: none !important;
+    border-radius: 18px !important;
+
+    box-shadow:
+        0 10px 28px rgba(155, 92, 255, 0.18),
+        0 2px 6px rgba(155, 92, 255, 0.10) !important;
+
+    padding: 20px !important;
+    margin-top: 12px !important;
+}
+
+/* pastikan clip ikut border radius */
+div[data-testid="stPlotlyChart"] > div{
+    border-radius: 18px !important;
+    overflow: hidden !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
+
+
 # =========================
 # KPI CARD FUNCTION
 # =========================
@@ -468,14 +496,19 @@ def make_bar_chart(df, title):
     return fig
 
 
-def render_chart(df_chart, title):
+def render_chart_card(df_chart, title):
     fig = make_bar_chart(df_chart, title)
-    if fig is not None:
-        st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
-    else:
-        st.info("Tiada data untuk paparan.")
+    if fig is None:
+        st.write("Tiada data untuk paparan.")
+        return
 
-# =========================
+    st.plotly_chart(
+        fig,
+        use_container_width=True,
+        config={"displayModeBar": False}
+    )
+
+
 # MAIN
 # =========================
 st.title("Dashboard SAP Vs Easset")
@@ -491,18 +524,26 @@ with kpi_col3:
 with kpi_col4:
     kpi_card("Aset Salah Klasifikasi", len(mis_f))
 
+st.markdown("<div style='height:28px;'></div>", unsafe_allow_html=True)
+
+
 # CHARTS (2 x 2) — normal streamlit, tiada kotak custom
 row1_col1, row1_col2 = st.columns(2)
 row2_col1, row2_col2 = st.columns(2)
 
 with row1_col1:
-    render_chart(chart1_df, "Isu 1 Aset ada di SAP tiada di Easset")
+    render_chart_card(chart1_df, "Isu 1 Aset ada di SAP tiada di Easset")
+
 with row1_col2:
-    render_chart(chart2_df, "Isu 2 Aset ada di Easset tiada di SAP")
+    render_chart_card(chart2_df, "Isu 2 Aset ada di Easset tiada di SAP")
+
 with row2_col1:
-    render_chart(chart3_df, "Isu 3 Lokasi berlainan SAP vs Easset")
+    render_chart_card(chart3_df, "Isu 3 Lokasi berlainan SAP vs Easset")
+
 with row2_col2:
-    render_chart(chart4_df, "Isu 4 Aset salah klasifikasi Harta Modal")
+    render_chart_card(chart4_df, "Isu 4 Aset salah klasifikasi Harta Modal")
+
+
 
 # ================================
 # TABLE 1
