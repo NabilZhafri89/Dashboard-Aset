@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import os
 from datetime import datetime
+import requests
+import io
 
 st.set_page_config(page_title="Senarai Pemilikan Aset", layout="wide")
 
@@ -294,23 +296,47 @@ button[kind="secondary"]:nth-of-type(2){
 </style>
 """, unsafe_allow_html=True)
 
+# =========================
+# GOOGLE DRIVE HELPERS
+# =========================
+def _download_gdrive_file(file_id: str) -> bytes:
+    URL = "https://drive.google.com/uc?export=download"
+    session = requests.Session()
+
+    r = session.get(URL, params={"id": file_id}, stream=True)
+    r.raise_for_status()
+
+    token = None
+    for k, v in r.cookies.items():
+        if k.startswith("download_warning"):
+            token = v
+            break
+
+    if token:
+        r = session.get(URL, params={"id": file_id, "confirm": token}, stream=True)
+        r.raise_for_status()
+
+    return r.content
+
+
+def read_csv_from_gdrive(file_id: str, **read_csv_kwargs) -> pd.DataFrame:
+    content = _download_gdrive_file(file_id)
+    return pd.read_csv(io.BytesIO(content), **read_csv_kwargs)
 
 
 
 # =========================
 # FILE PATHS (SAMA PROJECT)
 # =========================
-EASSET_PATH = "Senarai_Aset_Easset.csv"
+EASSET_PATH = "1JDjlKqqBUF1k0ET9YiBHPf0T5cu4ihhs"
 DIM_EVA_PATH = "DIM Eva grp 1.csv"
 
-# Tarikh kemaskini (ikut Easset)
-last_update_timestamp = os.path.getmtime(EASSET_PATH)
-last_update_date = datetime.fromtimestamp(last_update_timestamp).strftime("%d %b %Y")
+
 
 # =========================
 # LOAD DATA (EASSET SAHAJA)
 # =========================
-df_easset = pd.read_csv(EASSET_PATH)
+df_easset = read_csv_from_gdrive(EASSET_FILE_ID)
 dim_eva = pd.read_csv(DIM_EVA_PATH)
 
 df_easset.columns = df_easset.columns.str.strip()
@@ -455,19 +481,6 @@ if ptj_filter == "HQ":
     if bahagian_filter != "Semua":
         df_after_bahagian = df_after_ptj[df_after_ptj["Bahagian"] == bahagian_filter].copy()
 
-st.sidebar.markdown(f"""
-    <div style="
-        margin-top:30px;
-        padding:12px 15px;
-        border:2px solid rgba(255,255,255,0.4);
-        border-radius:8px;
-        color:white;
-        font-size:14px;
-    ">
-        <b>Tarikh Kemaskini (Easset):</b><br>
-        {last_update_date}
-    </div>
-""", unsafe_allow_html=True)
 
 # 3️⃣ NAMA PEGAWAI (BASED ON PTJ + BAHAGIAN)
 pegawai_list = sorted(df_after_bahagian["officer"].dropna().unique().tolist())

@@ -3,6 +3,10 @@ import pandas as pd
 import plotly.express as px
 import os
 from datetime import datetime
+import gdown
+import tempfile
+import requests
+import io
 
 st.set_page_config(page_title="Dashboard SAP Vs Easset", layout="wide")
 
@@ -232,22 +236,51 @@ def kpi_card(title, value):
     )
 
 # =========================
+# GOOGLE DRIVE HELPERS
+# =========================
+def _download_gdrive_file(file_id: str) -> bytes:
+    """
+    Download file from Google Drive using file_id (handles confirm token for large files).
+    """
+    URL = "https://drive.google.com/uc?export=download"
+    session = requests.Session()
+
+    r = session.get(URL, params={"id": file_id}, stream=True)
+    r.raise_for_status()
+
+    # handle 'confirm' token for large files
+    token = None
+    for k, v in r.cookies.items():
+        if k.startswith("download_warning"):
+            token = v
+            break
+
+    if token:
+        r = session.get(URL, params={"id": file_id, "confirm": token}, stream=True)
+        r.raise_for_status()
+
+    return r.content
+
+
+def read_csv_from_gdrive(file_id: str, **read_csv_kwargs) -> pd.DataFrame:
+    content = _download_gdrive_file(file_id)
+    return pd.read_csv(io.BytesIO(content), **read_csv_kwargs)
+
+
+# =========================
 # FILE PATHS
 # =========================
-SAP_PATH = "Asset_Balance_SAP.csv"
-EASSET_PATH = "Senarai_Aset_Easset.csv"
+SAP_PATH = "1DTXlpMUVBTgsqDnmetH-P4eKpIcFuxWg"
+EASSET_PATH = "1JDjlKqqBUF1k0ET9YiBHPf0T5cu4ihhs"
 DIM_CLASS_PATH = "DIM Asset Class.csv"
 DIM_EVA_PATH = "DIM Eva grp 1.csv"
 
-# Tarikh kemaskini
-last_update_timestamp = os.path.getmtime(SAP_PATH)
-last_update_date = datetime.fromtimestamp(last_update_timestamp).strftime("%d %b %Y")
 
 # =========================
 # LOAD DATA
 # =========================
-df_sap = pd.read_csv(SAP_PATH)
-df_easset = pd.read_csv(EASSET_PATH)
+df_sap = read_csv_from_gdrive(SAP_FILE_ID)
+df_easset = read_csv_from_gdrive(EASSET_FILE_ID)
 dim_class = pd.read_csv(DIM_CLASS_PATH)
 dim_eva = pd.read_csv(DIM_EVA_PATH)
 
@@ -452,19 +485,7 @@ ptj_list = sorted(all_ptj.dropna().unique().tolist())
 ptj_list.insert(0, "Semua")
 ptj_filter = st.sidebar.selectbox("PTJ", ptj_list)
 
-st.sidebar.markdown(f"""
-    <div style="
-        margin-top:30px;
-        padding:12px 15px;
-        border:2px solid rgba(255,255,255,0.4);
-        border-radius:8px;
-        color:white;
-        font-size:14px;
-    ">
-        <b>Tarikh Kemaskini:</b><br>
-        {last_update_date}
-    </div>
-""", unsafe_allow_html=True)
+
 
 # =========================
 # FILTER HELPERS
