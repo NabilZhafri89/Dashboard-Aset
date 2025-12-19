@@ -1,10 +1,6 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-import os
-from datetime import datetime
-import gdown
-import tempfile
 import requests
 import io
 
@@ -270,8 +266,8 @@ def read_csv_from_gdrive(file_id: str, **read_csv_kwargs) -> pd.DataFrame:
 # =========================
 # FILE PATHS
 # =========================
-SAP_PATH = "1DTXlpMUVBTgsqDnmetH-P4eKpIcFuxWg"
-EASSET_PATH = "1JDjlKqqBUF1k0ET9YiBHPf0T5cu4ihhs"
+SAP_FILE_ID    = "1DTXlpMUVBTgsqDnmetH-P4eKpIcFuxWg"
+EASSET_FILE_ID = "1JDjlKqqBUF1k0ET9YiBHPf0T5cu4ihhs"
 DIM_CLASS_PATH = "DIM Asset Class.csv"
 DIM_EVA_PATH = "DIM Eva grp 1.csv"
 
