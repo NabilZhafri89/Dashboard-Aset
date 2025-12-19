@@ -321,6 +321,11 @@ def read_csv_from_gdrive(file_id: str, **read_csv_kwargs) -> pd.DataFrame:
     content = _download_gdrive_file(file_id)
     return pd.read_csv(io.BytesIO(content), **read_csv_kwargs)
 
+def load_easset_once():
+    if "df_easset_raw" not in st.session_state:
+        st.session_state["df_easset_raw"] = read_csv_from_gdrive(EASSET_FILE_ID)
+
+    return st.session_state["df_easset_raw"].copy()
 
 
 # =========================
@@ -333,7 +338,7 @@ DIM_EVA_PATH   = "DIM Eva grp 1.csv"
 # =========================
 # LOAD DATA (EASSET SAHAJA)
 # =========================
-df_easset = read_csv_from_gdrive(EASSET_FILE_ID)
+df_easset = load_easset_once()
 dim_eva = pd.read_csv(DIM_EVA_PATH)
 
 df_easset.columns = df_easset.columns.str.strip()

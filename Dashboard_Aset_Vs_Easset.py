@@ -262,6 +262,18 @@ def read_csv_from_gdrive(file_id: str, **read_csv_kwargs) -> pd.DataFrame:
     content = _download_gdrive_file(file_id)
     return pd.read_csv(io.BytesIO(content), **read_csv_kwargs)
 
+def load_asset_data_once():
+    if "df_sap_raw" not in st.session_state:
+        st.session_state["df_sap_raw"] = read_csv_from_gdrive(SAP_FILE_ID)
+
+    if "df_easset_raw" not in st.session_state:
+        st.session_state["df_easset_raw"] = read_csv_from_gdrive(EASSET_FILE_ID)
+
+    return (
+        st.session_state["df_sap_raw"].copy(),
+        st.session_state["df_easset_raw"].copy(),
+    )
+
 
 # =========================
 # FILE PATHS
@@ -275,8 +287,7 @@ DIM_EVA_PATH = "DIM Eva grp 1.csv"
 # =========================
 # LOAD DATA
 # =========================
-df_sap = read_csv_from_gdrive(SAP_FILE_ID)
-df_easset = read_csv_from_gdrive(EASSET_FILE_ID)
+df_sap, df_easset = load_asset_data_once()
 dim_class = pd.read_csv(DIM_CLASS_PATH)
 dim_eva = pd.read_csv(DIM_EVA_PATH)
 
